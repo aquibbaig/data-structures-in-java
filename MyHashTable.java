@@ -12,11 +12,28 @@ class HashTable<T> {
   Node<T> arr[];
   HashTable() {
     // constructor
-    this.arr = new Node[50];
+    this.arr = new Node[8];
   }
   public void add(String key, T value) {
+    // grow the hashtable (Table doubling)
+    int len = 0;
+    for (int i=0; i < this.arr.length; i++) {
+      if (this.arr[i] != null) len++;
+    }
+    if(len >= this.arr.length/2) {
+      Node newArr[] = new Node[this.arr.length*2];
+      for (int i=0; i < this.arr.length; i++) {
+        if (this.arr[i] != null) {
+          // move it to the new array
+          int hashCode = this.arr[i].key.hashCode();
+          newArr[hashCode] = new Node<T>(this.arr[i].key, this.arr[i].data);
+        };
+      }
+      this.arr = newArr;
+    }
+    
+    // Inserts a value into the HashTable
     int hashcode = key.hashCode() % this.arr.length;
-    System.out.println(hashcode);
     if (this.arr[hashcode] == null) {
       this.arr[hashcode] = new Node<T>(key, value);
     } else {
